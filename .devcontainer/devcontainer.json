@@ -1,0 +1,62 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.194.0/containers/ubuntu
+{
+	"name": "Ubuntu",
+	"build": {
+		"dockerfile": "Dockerfile",
+		// Update 'VARIANT' to pick an Ubuntu version: focal, bionic
+		"args": {
+			"VARIANT": "focal",
+			"TERRAFORM_VERSION": "1.0.7",
+			"PRECOMMIT_VERSION": "2.15.0",
+			"TERRAFORM_DOCS_VERSION": "v0.15.0",
+			"TFLINT_VERSION": "v0.32.1",
+			"TFSEC_VERSION": "v0.56.0",
+			"DIRENV_VERSION": "v2.28.0",
+			"FZF_VERSION": "0.27.2",
+			"GITHUB_TOKEN": "${localEnv:GITHUB_TOKEN}"
+		},
+		"target": "final"
+	},
+
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"terminal.integrated.profiles.linux": {
+			"zsh": {
+				"path": "/bin/zsh",
+				"args": []
+			}
+		},
+		"terminal.integrated.defaultProfile.linux": "zsh",
+	},
+
+
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"aaron-bond.better-comments",
+		"stackbreak.comment-divider",
+		"eamodio.gitlens",
+		"hashicorp.terraform",
+		"oderwat.indent-rainbow",
+		"ms-vsliveshare.vsliveshare",
+		"yzhang.markdown-all-in-one",
+		"foxundermoon.shell-format",
+		"timonwong.shellcheck",
+		"VisualStudioExptTeam.vscodeintellicode",
+		"redhat.vscode-yaml"
+	],
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "terraform -install-autocomplete && direnv allow && kubectl krew install ns && kubectl krew install ctx",
+
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode",
+	"mounts": [
+		"source=${localEnv:HOME}${localEnv:APPDATA}/.terraform.d,target=/home/vscode/.terraform.d,type=bind,consistency=cached",
+		"source=${localEnv:HOME}${localEnv:APPDATA}/.kube,target=/home/vscode/.kube,type=bind,consistency=cached",
+		"source=${localEnv:HOME}${localEnv:APPDATA}/.aws,target=/home/vscode/.aws,type=bind,consistency=cached"
+	]
+}
